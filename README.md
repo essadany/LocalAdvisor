@@ -28,3 +28,18 @@ LocalAdvisor est une plateforme où les utilisateurs peuvent donner et consulter
             -  Carte interactive 
             -  Favoris (les utilisateurs peuvent sauvegarder des lieux)
             -  Notifications des nouveaux avis 
+
+📌 Phase 2 : Développement Backend avec Spring Boot
+
+🔹 1. Initialisation du projet
+
+            1️⃣ Aller sur Spring Initializr
+            2️⃣ Sélectionner les dépendances suivantes :
+                        Spring Web (pour créer une API REST)
+                        Spring Security (pour sécuriser l’API avec JWT)
+                        Spring Data JPA (pour gérer les bases de données)
+                        MySQL Driver
+                        Lombok (réduit le code répétitif)
+            3️⃣ Générer et télécharger le projet
+            4️⃣ Ouvrir avec IntelliJ IDEA
+
