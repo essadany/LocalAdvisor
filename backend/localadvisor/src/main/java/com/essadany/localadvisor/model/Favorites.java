@@ -1,19 +1,20 @@
 package com.essadany.localadvisor.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
 @Entity
-@Table(name = "reviews")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Review {
+public class Favorites {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reviewId;
+    private Long favoriteId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -23,7 +24,5 @@ public class Review {
     @JoinColumn(name = "place_id")
     private Place place;
 
-    private String content;
-    private int rating;
-    private Date createdAt;
+    private Date dateAdded;
 }
