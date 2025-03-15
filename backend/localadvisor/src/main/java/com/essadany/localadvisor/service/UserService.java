@@ -19,4 +19,13 @@ public class UserService {
     public List<User> getAllUsers() {
         return UserRepository.findAll();
     }
+
+    public Optional<User> getUserByEmail(String email) {
+        return UserRepository.findByEmail(email);
+    }
+
+
+    public void saveUser(User user) {
+        UserRepository.save(user);
+    }
 }

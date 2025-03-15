@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/favorites")
+@RequestMapping("api/favorites")
 class FavoritesController {
     @Autowired
     private FavoritesService favoritesService;

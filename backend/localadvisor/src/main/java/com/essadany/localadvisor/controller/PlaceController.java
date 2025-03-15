@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/places")
+@RequestMapping("api/places")
 class PlaceController {
     @Autowired
     private PlaceService placeService;

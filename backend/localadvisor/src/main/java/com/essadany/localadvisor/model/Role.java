@@ -1,5 +1,6 @@
 package com.essadany.localadvisor.model;
 
+
 public enum Role {
 
     USER, ADMIN;
