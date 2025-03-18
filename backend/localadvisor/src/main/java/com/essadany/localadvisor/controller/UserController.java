@@ -15,12 +15,6 @@ class UserController {
     @Autowired
     private UserService UserService;
 
-    @GetMapping("/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        Optional<User> user = UserService.getUserByEmail(email);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
-    }
-
 
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -28,5 +22,28 @@ class UserController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(UserService.getAllUsers());
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        User userToUpdate = UserService.getUserById(id);
+        if (userToUpdate == null) {
+            return ResponseEntity.notFound().build();
+        }
+        user.setId(id);
+        return ResponseEntity.ok(UserService.updateUser(user));
+
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        UserService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+        Optional<User> user = UserService.getUserByEmail(email);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
 }

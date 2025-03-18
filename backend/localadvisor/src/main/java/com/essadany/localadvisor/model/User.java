@@ -1,5 +1,6 @@
 package com.essadany.localadvisor.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,8 +24,12 @@ public class User {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Favorites> favorites;
+    @JsonIgnore
+    private List<Favorite> favorites;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Review> reviews;
+
+
 }

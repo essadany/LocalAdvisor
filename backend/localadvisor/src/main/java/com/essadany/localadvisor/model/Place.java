@@ -1,6 +1,9 @@
 package com.essadany.localadvisor.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.util.List;
@@ -15,16 +18,20 @@ public class Place {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long placeId;
     private String name;
+    private String address;
+    private String city;
+    private String state;
+    private String zip;
     private String description;
-    private String location;
+    private String image;
+    @Min(0)
+    @Max(5)
+    private int rating;
+
 
     @ManyToOne
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
-    private List<Favorites> favorites;
 
-    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
-    private List<Review> reviews;
 }

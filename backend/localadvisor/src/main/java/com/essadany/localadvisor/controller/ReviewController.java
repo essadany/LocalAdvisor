@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -20,7 +21,13 @@ class ReviewController {
         return ResponseEntity.ok(createdReview);
     }
 
-
+    @GetMapping("/all")
+    public ResponseEntity<List<Review>> getAllReviews() {
+        if (reviewService.getAllReviews().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reviewService.getAllReviews());
+    }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<Review>> getReviewsByUser(@PathVariable Long userId) {
@@ -29,4 +36,32 @@ class ReviewController {
         }
         return ResponseEntity.ok(reviewService.getReviewsByUser(userId));
     }
+
+    @GetMapping("/place/{placeId}")
+    public ResponseEntity<List<Review>> getReviewsByPlace(@PathVariable Long placeId) {
+        if (reviewService.getReviewsByPlace(placeId).isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(reviewService.getReviewsByPlace(placeId));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Review> updateReview(@PathVariable Long id, @RequestBody Review review) {
+        if (reviewService.getReviewById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        review.setReviewId(id);
+        return ResponseEntity.ok(reviewService.updateReview(review));
+    }
+
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
+        reviewService.deleteReview(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+
 }

@@ -1,6 +1,8 @@
 package com.essadany.localadvisor.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 import java.util.Date;
@@ -24,6 +26,8 @@ public class Review {
     private Place place;
 
     private String content;
+    @Min(0)
+    @Max(5)
     private int rating;
     private Date createdAt;
 }

@@ -15,12 +15,6 @@ class PlaceController {
     @Autowired
     private PlaceService placeService;
 
-    @PostMapping("/add")
-    public ResponseEntity<Place> addPlace(@RequestBody Place place) {
-        Place createdPlace = placeService.addPlace(place);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdPlace);
-    }
-
     @GetMapping("/all")
     public ResponseEntity<List<Place>> getAllPlaces() {
         if (placeService.getAllPlaces().isEmpty()) {
@@ -28,4 +22,35 @@ class PlaceController {
         }
         return ResponseEntity.ok(placeService.getAllPlaces());
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<Place> addPlace(@RequestBody Place place) {
+        Place createdPlace = placeService.addPlace(place);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdPlace);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Place> updatePlace(@PathVariable Long id, @RequestBody Place place) {
+        if (placeService.getPlaceById(id).isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        place.setPlaceId(id);
+        return ResponseEntity.ok(placeService.updatePlace(place));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deletePlace(@PathVariable Long id) {
+        placeService.deletePlace(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteAllPlaces() {
+        placeService.deleteAllPlaces();
+        return ResponseEntity.noContent().build();
+    }
+
+
+
+
 }
