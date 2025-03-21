@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/favorites")
-class FavoritesController {
+class FavoriteController {
     @Autowired
     private FavoriteService favoriteService;
 
-    @GetMapping("/all")
+    /*@GetMapping("/all")
     public ResponseEntity<Iterable<Favorite>> getAllFavorites() {
         if (favoriteService.getAllFavorites().isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -35,6 +35,6 @@ class FavoritesController {
     public ResponseEntity<Void> removeAllFavorites() {
         favoriteService.removeAllFavorites();
         return ResponseEntity.noContent().build();
-    }
+    }*/
 
 }
