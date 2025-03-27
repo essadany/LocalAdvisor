@@ -1,5 +1,6 @@
 package com.essadany.localadvisor.controller;
 
+import com.essadany.localadvisor.model.Favorite;
 import com.essadany.localadvisor.service.UserService;
 import com.essadany.localadvisor.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +42,10 @@ class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
         Optional<User> user = UserService.getUserByEmail(email);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
     }
+
 }

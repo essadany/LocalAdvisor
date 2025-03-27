@@ -5,13 +5,19 @@ export interface AuthResponse {
 }
 
 export const registerApi = async (name: string, email:string, password: string) : Promise<AuthResponse> => {
-  const response = await fetch('app/api/auth/register', {
+  const response = await fetch('api/auth/register', {
     method: 'POST',
-    body: JSON.stringify({ name, email, password }),
+    body: JSON.stringify({ name, email, password, role: 'user' }),
     headers: { 'Content-Type': 'application/json' },
   });
-  if (!response.ok) throw new Error('Erreur lors de l\'inscription');
-  return await response.json();
+  const responseBody = await response.json();
+
+  if (!response.ok) {
+    console.error('Registration failed:', response.status, responseBody);
+    throw new Error(responseBody.message);
+  }
+
+  return responseBody;
 }
 
 export const loginApi = async (email: string, password: string) : Promise<AuthResponse> => {

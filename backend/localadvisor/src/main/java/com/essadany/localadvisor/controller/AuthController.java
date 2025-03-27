@@ -33,14 +33,20 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
+        Map<String, Object> response = new HashMap<>();
         if (userService.getUserByEmail(user.getEmail()).isPresent()) {
-            return ResponseEntity.badRequest().body("User with email already exists");
+            HttpStatus conflict = HttpStatus.CONFLICT;
+            response.put("status", conflict.value());
+            response.put("message", "L'utilisateur existe déja");
+            return ResponseEntity.status(conflict).body(response);
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.saveUser(user);
-
-        return ResponseEntity.ok("User registered successfully");
+        HttpStatus created = HttpStatus.CREATED;
+        response.put("status", created.value());
+        response.put("message", "Utilisateur enregistré avec succès");
+        return ResponseEntity.status(created).body(response);
     }
 
     @PostMapping("/login")

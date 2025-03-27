@@ -12,29 +12,25 @@ class FavoriteController {
     @Autowired
     private FavoriteService favoriteService;
 
-    /*@GetMapping("/all")
-    public ResponseEntity<Iterable<Favorite>> getAllFavorites() {
-        if (favoriteService.getAllFavorites().isEmpty()) {
-            return ResponseEntity.noContent().build();
+    @GetMapping("/{userId}")
+    public ResponseEntity<Iterable<Favorite>> getFavoritesByUserId(@PathVariable Long userId) {
+        return ResponseEntity.ok(favoriteService.getFavoritesByUserId(userId));
+    }
+
+    @PostMapping("/{userId}/add/{placeId}")
+    public ResponseEntity<?> addFavorite(@PathVariable Long userId, @PathVariable Long placeId) {
+        Favorite addedFavorite = favoriteService.addFavorite(userId, placeId);
+        if (addedFavorite == null) {
+            return ResponseEntity.badRequest().body("Favorite already exists");
         }
-        return ResponseEntity.ok(favoriteService.getAllFavorites());
+        return ResponseEntity.ok("Favorite added successfully");
     }
-    @PostMapping("/add")
-    public ResponseEntity<Favorite> addToFavorites(@RequestParam Long userId, @RequestParam Long placeId) {
-        Favorite favorite = favoriteService.addToFavorites(userId, placeId);
-        return ResponseEntity.ok(favorite);
-    }
+
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> removeFromFavorites(@PathVariable Long id) {
-        favoriteService.removeFromFavorites(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> removeFavoriteById(@PathVariable Long id) {
+        favoriteService.removeFavoriteById(id);
+        return ResponseEntity.ok("Favorite removed successfully");
     }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<Void> removeAllFavorites() {
-        favoriteService.removeAllFavorites();
-        return ResponseEntity.noContent().build();
-    }*/
 
 }

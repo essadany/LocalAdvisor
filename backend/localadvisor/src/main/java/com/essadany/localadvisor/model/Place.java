@@ -1,6 +1,7 @@
 package com.essadany.localadvisor.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -20,10 +21,11 @@ public class Place {
     private String name;
     private String address;
     private String city;
-    private String state;
+    private String country;
+    private String website;
+    private String phone;
     private String zip;
     private String description;
-    private String image;
     @Min(0)
     @Max(5)
     private int rating;
@@ -32,6 +34,14 @@ public class Place {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Review> reviews;
+
+    @OneToMany(mappedBy = "place", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Image> images;
 
 
 }

@@ -23,6 +23,11 @@ const router = createRouter({
       component: () => import('../views/Auth/LoginPage.vue'),
     },
     {
+      path: '/register',
+      name: 'register',
+      component: () => import('../views/Auth/LoginPage.vue'),
+    },
+    {
       path: '/places',
       name: 'places',
       component: () => import('../views/places/PlacesList.vue'),
@@ -31,7 +36,37 @@ const router = createRouter({
       path: '/places/:id',
       name: 'place',
       component: () => import('../views/places/PlaceDetails.vue'),
-    }
+    },
+    {
+      path: '/places/:id/edit',
+      name: 'edit-place',
+      component: () => import('../views/places/PlaceEdit.vue'),
+    },
+    {
+      path: '/places/new',
+      name: 'new-place',
+      component: () => import('../views/places/PlaceEdit.vue'),
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/users/UserProfile.vue'),
+    },
+    {
+      path: '/categories',
+      name: 'categories',
+      component: () => import('../views/CategoriesList.vue'),
+    },
+    {
+      path: '/contact',
+      name: 'contact',
+      component: () => import('../views/ContactView.vue'),
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('../views/NotFound.vue'),
+    },
 
   ],
 })

@@ -16,6 +16,7 @@ public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long favoriteId;
+    private Date dateAdded;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -25,5 +26,7 @@ public class Favorite {
     @JoinColumn(name = "place_id", nullable = false)
     private Place place;
 
-    private Date dateAdded;
+
+
+
 }

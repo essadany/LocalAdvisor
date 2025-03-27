@@ -6,7 +6,7 @@
       <div class="flex items-center text-sm text-gray-600 mb-6">
         <router-link to="/" class="hover:text-emerald-600 transition-colors">Accueil</router-link>
         <ChevronRightIcon class="h-4 w-4 mx-2" />
-        <router-link to="/palces" class="hover:text-emerald-600 transition-colors">Lieux</router-link>
+        <router-link to="/lieux" class="hover:text-emerald-600 transition-colors">Lieux</router-link>
         <ChevronRightIcon class="h-4 w-4 mx-2" />
         <span class="text-gray-800">{{ lieu.nom }}</span>
       </div>
@@ -43,10 +43,13 @@
               </div>
               <p class="text-gray-600">{{ lieu.categorie }}</p>
             </div>
-            <div class="mt-4 md:mt-0">
+            <div class="mt-4 md:mt-0 flex space-x-4">
               <button class="px-4 py-2 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition-colors">
-                Ajouter un avis
+              Ajouter un avis
               </button>
+              <router-link :to="`/places/${lieu.id}/edit`" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                <PencilIcon class="h-5 w-5 text-white" />
+              </router-link>
             </div>
           </div>
 
@@ -327,7 +330,7 @@
               <p class="text-gray-600 text-sm mt-1">{{ lieuSimilaire.categorie }}</p>
               <p class="text-gray-700 mt-2 line-clamp-2">{{ lieuSimilaire.description }}</p>
               <div class="mt-4 flex justify-between items-center">
-                <router-link :to="`/places/${lieuSimilaire.id}`" class="text-emerald-600 hover:underline">Voir détails</router-link>
+                <router-link :to="`/lieux/${lieuSimilaire.id}`" class="text-emerald-600 hover:underline">Voir détails</router-link>
                 <button class="text-gray-400 hover:text-red-500 transition-colors">
                   <HeartIcon class="h-6 w-6" :class="{ 'text-red-500 fill-current': lieuSimilaire.favori }" />
                 </button>
@@ -354,7 +357,8 @@ import {
   MapIcon,
   ThumbsUpIcon,
   MessageSquareIcon,
-  FlagIcon
+  FlagIcon,
+  PencilIcon
 } from 'lucide-vue-next';
 
 // ID du lieu (normalement récupéré depuis la route)
@@ -489,7 +493,7 @@ const lieuxSimilaires = ref([
 // Pagination des avis
 const itemsPerPage = 3;
 const currentPage = ref(1);
-const avisFilter = ref('all');
+const avisFilter = ref<number | string>('all');
 
 // Avis filtrés
 const filteredAvis = computed(() => {
@@ -497,7 +501,7 @@ const filteredAvis = computed(() => {
 
   // Filtre par note
   if (avisFilter.value !== 'all') {
-    result = result.filter(avis => avis.note === Number(avisFilter.value));
+    result = result.filter(avis => avis.note === avisFilter.value);
   }
 
   // Tri par date (plus récent d'abord)
@@ -514,7 +518,7 @@ const totalPages = computed(() => {
   let filteredCount = lieu.value.avis.length;
 
   if (avisFilter.value !== 'all') {
-    filteredCount = lieu.value.avis.filter(avis => avis.note === Number(avisFilter.value)).length;
+    filteredCount = lieu.value.avis.filter(avis => avis.note === avisFilter.value).length;
   }
 
   return Math.ceil(filteredCount / itemsPerPage);
@@ -533,7 +537,7 @@ const nextPage = () => {
   }
 };
 
-const goToPage = (page: number) => {
+const goToPage = (page : number) => {
   currentPage.value = page;
 };
 
@@ -595,7 +599,7 @@ const submitAvis = () => {
 };
 
 // Fonction pour formater les dates
-const formatDate = (dateString: string) => {
+const formatDate = (dateString : string) => {
   const date = new Date(dateString);
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 };
@@ -606,13 +610,13 @@ const toggleFavori = () => {
 };
 
 // Fonction pour obtenir le pourcentage d'avis pour chaque note
-const getPercentageForRating = (rating: number) => {
+const getPercentageForRating = (rating : number) => {
   const count = lieu.value.avis.filter(avis => avis.note === rating).length;
   return (count / lieu.value.avis.length) * 100;
 };
 
 // Fonction pour obtenir le nombre d'avis pour chaque note
-const getCountForRating = (rating: number) => {
+const getCountForRating = (rating : number) => {
   return lieu.value.avis.filter(avis => avis.note === rating).length;
 };
 

@@ -78,16 +78,17 @@
               <p class="text-gray-600 mb-4">{{ place.description }}</p>
               <div class="flex justify-between items-center">
                 <span class="text-sm text-gray-500">{{ place.location }}</span>
-                <button class="px-4 py-2 border border-emerald-600 text-emerald-600 rounded-md hover:bg-emerald-50 transition">
-                  Voir détails
-                </button>
+                  <button  class="text-gray-400 hover:text-red-500 transition-colors">
+                    <router-link :to="`/places/${place.id}`" class="text-emerald-600 hover:underline">Voir détails</router-link>
+
+                  </button>
               </div>
             </div>
           </div>
         </div>
 
         <div class="text-center mt-12">
-          <button class="px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition">
+          <button @click="router.push('/places')" class="px-6 py-3 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 transition">
             Voir plus de lieux
           </button>
         </div>
@@ -201,6 +202,7 @@ import {
   Smartphone as SmartphoneIcon,
   Apple as AppleIcon
 } from 'lucide-vue-next'
+import router from '@/router'
 
 const selectedCategory = ref('')
 const location = ref('')

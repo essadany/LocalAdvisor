@@ -29,11 +29,11 @@
               <label v-for="(categorie, index) in categories" :key="index" class="flex items-center">
                 <input
                   type="checkbox"
-                  :value="categorie.nom"
+                  :value="categorie.name"
                   v-model="selectedCategories"
                   class="rounded text-emerald-600 focus:ring-emerald-500 h-4 w-4"
                 />
-                <span class="ml-2 text-gray-700">{{ categorie.nom }}</span>
+                <span class="ml-2 text-gray-700">{{ categorie.name }}</span>
               </label>
             </div>
           </div>
@@ -109,16 +109,16 @@
           </div>
 
           <!-- Résultats -->
-          <div v-if="paginatedLieux.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div v-if="paginatedLieux.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div
               v-for="lieu in paginatedLieux"
               :key="lieu.id"
               class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
             >
-              <img :src="lieu.image" :alt="lieu.nom" class="w-full h-48 object-cover" />
+              <img :src="lieu.image" :alt="lieu.name" class="w-full h-48 object-cover" />
               <div class="p-4">
                 <div class="flex justify-between items-start">
-                  <h2 class="text-lg font-bold text-gray-800">{{ lieu.nom }}</h2>
+                  <h2 class="text-lg font-bold text-gray-800">{{ lieu.name }}</h2>
                   <div class="flex items-center">
                     <StarIcon class="h-5 w-5 text-yellow-500" />
                     <span class="ml-1 text-gray-700">{{ lieu.note }}</span>
@@ -134,7 +134,7 @@
                 </div>
               </div>
             </div>
-          </div>
+            </div>
 
           <!-- Message si aucun résultat -->
           <div v-else class="bg-white rounded-lg shadow-md p-8 text-center">
@@ -196,12 +196,12 @@ import {
 
 // Catégories
 const categories = ref([
-  { nom: 'Restaurants', icon: 'utensils' },
-  { nom: 'Cafés', icon: 'coffee' },
-  { nom: 'Shopping', icon: 'shopping-bag' },
-  { nom: 'Parcs', icon: 'tree' },
-  { nom: 'Hôtels', icon: 'building' },
-  { nom: 'Culture', icon: 'museum' }
+  { name: 'Restaurants', icon: 'utensils' },
+  { name: 'Cafés', icon: 'coffee' },
+  { name: 'Shopping', icon: 'shopping-bag' },
+  { name: 'Parcs', icon: 'tree' },
+  { name: 'Hôtels', icon: 'building' },
+  { name: 'Culture', icon: 'museum' }
 ]);
 
 // Filtres
@@ -220,7 +220,7 @@ const totalPages = computed(() => Math.ceil(filteredLieux.value.length / itemsPe
 const lieux = ref([
   {
     id: 1,
-    nom: 'Le Petit Bistrot',
+    name: 'Le Petit Bistrot',
     categorie: 'Restaurants',
     note: 4.8,
     description: 'Un charmant bistrot français avec une cuisine authentique et une ambiance conviviale.',
@@ -231,7 +231,7 @@ const lieux = ref([
   },
   {
     id: 2,
-    nom: 'Café des Artistes',
+    name: 'Café des Artistes',
     categorie: 'Cafés',
     note: 4.5,
     description: 'Un café cosy où les artistes locaux exposent leurs œuvres. Parfait pour travailler ou se détendre.',
@@ -242,7 +242,7 @@ const lieux = ref([
   },
   {
     id: 3,
-    nom: 'Parc des Cèdres',
+    name: 'Parc des Cèdres',
     categorie: 'Parcs',
     note: 4.7,
     description: 'Un magnifique parc avec des sentiers de randonnée, des aires de jeux et des espaces de pique-nique.',
@@ -253,7 +253,7 @@ const lieux = ref([
   },
   {
     id: 4,
-    nom: 'Hôtel Bellevue',
+    name: 'Hôtel Bellevue',
     categorie: 'Hôtels',
     note: 4.3,
     description: 'Un hôtel élégant avec une vue imprenable sur la ville et un service impeccable.',
@@ -264,7 +264,7 @@ const lieux = ref([
   },
   {
     id: 5,
-    nom: 'Musée d\'Art Moderne',
+    name: 'Musée d\'Art Moderne',
     categorie: 'Culture',
     note: 4.6,
     description: 'Un musée fascinant présentant des œuvres d\'art contemporain d\'artistes locaux et internationaux.',
@@ -275,7 +275,7 @@ const lieux = ref([
   },
   {
     id: 6,
-    nom: 'Centre Commercial Les Arcades',
+    name: 'Centre Commercial Les Arcades',
     categorie: 'Shopping',
     note: 4.0,
     description: 'Un grand centre commercial avec une variété de boutiques, restaurants et divertissements.',
@@ -286,7 +286,7 @@ const lieux = ref([
   },
   {
     id: 7,
-    nom: 'La Trattoria',
+    name: 'La Trattoria',
     categorie: 'Restaurants',
     note: 4.4,
     description: 'Un restaurant italien authentique proposant des pizzas, pâtes et autres spécialités italiennes.',
@@ -297,7 +297,7 @@ const lieux = ref([
   },
   {
     id: 8,
-    nom: 'Théâtre Municipal',
+    name: 'Théâtre Municipal',
     categorie: 'Culture',
     note: 4.7,
     description: 'Un théâtre historique proposant une programmation variée de pièces, concerts et spectacles.',
@@ -308,7 +308,7 @@ const lieux = ref([
   },
   {
     id: 9,
-    nom: 'Boulangerie Artisanale',
+    name: 'Boulangerie Artisanale',
     categorie: 'Cafés',
     note: 4.9,
     description: 'Une boulangerie traditionnelle offrant des pains, viennoiseries et pâtisseries faits maison.',
@@ -319,7 +319,7 @@ const lieux = ref([
   },
   {
     id: 10,
-    nom: 'Jardin Botanique',
+    name: 'Jardin Botanique',
     categorie: 'Parcs',
     note: 4.5,
     description: 'Un jardin paisible avec une collection impressionnante de plantes exotiques et locales.',
@@ -330,7 +330,7 @@ const lieux = ref([
   },
   {
     id: 11,
-    nom: 'Boutique Mode Éthique',
+    name: 'Boutique Mode Éthique',
     categorie: 'Shopping',
     note: 4.2,
     description: 'Une boutique proposant des vêtements et accessoires éthiques et durables de créateurs locaux.',
@@ -341,7 +341,7 @@ const lieux = ref([
   },
   {
     id: 12,
-    nom: 'Auberge du Vieux Port',
+    name: 'Auberge du Vieux Port',
     categorie: 'Hôtels',
     note: 4.6,
     description: 'Une auberge charmante située dans un bâtiment historique avec une ambiance chaleureuse.',
@@ -360,7 +360,7 @@ const filteredLieux = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     result = result.filter(lieu =>
-      lieu.nom.toLowerCase().includes(query) ||
+      lieu.name.toLowerCase().includes(query) ||
       lieu.description.toLowerCase().includes(query)
     );
   }
