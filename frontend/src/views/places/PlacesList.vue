@@ -109,32 +109,13 @@
           </div>
 
           <!-- Résultats -->
-            <div v-if="paginatedLieux.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
+          <div v-if="paginatedLieux.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <PlaceCard
               v-for="lieu in paginatedLieux"
-              :key="lieu.id"
-              class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-            >
-              <img :src="lieu.image" :alt="lieu.name" class="w-full h-48 object-cover" />
-              <div class="p-4">
-                <div class="flex justify-between items-start">
-                  <h2 class="text-lg font-bold text-gray-800">{{ lieu.name }}</h2>
-                  <div class="flex items-center">
-                    <StarIcon class="h-5 w-5 text-yellow-500" />
-                    <span class="ml-1 text-gray-700">{{ lieu.note }}</span>
-                  </div>
-                </div>
-                <p class="text-gray-600 text-sm mt-1">{{ lieu.categorie }}</p>
-                <p class="text-gray-700 mt-2 line-clamp-2">{{ lieu.description }}</p>
-                <div class="mt-4 flex justify-between items-center">
-                  <router-link :to="`/places/${lieu.id}`" class="text-emerald-600 hover:underline">Voir détails</router-link>
-                  <button @click="toggleFavori(lieu.id)" class="text-gray-400 hover:text-red-500 transition-colors">
-                    <HeartIcon class="h-6 w-6" :class="{ 'text-red-500 fill-current': lieu.favori }" />
-                  </button>
-                </div>
-              </div>
-            </div>
-            </div>
+              :key="lieu.placeId"
+              :lieu="lieu"
+            />
+          </div>
 
           <!-- Message si aucun résultat -->
           <div v-else class="bg-white rounded-lg shadow-md p-8 text-center">
@@ -186,23 +167,8 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import {
-  SearchIcon,
-  StarIcon,
-  HeartIcon,
-  SearchXIcon
-} from 'lucide-vue-next';
-
-
-// Catégories
-const categories = ref([
-  { name: 'Restaurants', icon: 'utensils' },
-  { name: 'Cafés', icon: 'coffee' },
-  { name: 'Shopping', icon: 'shopping-bag' },
-  { name: 'Parcs', icon: 'tree' },
-  { name: 'Hôtels', icon: 'building' },
-  { name: 'Culture', icon: 'museum' }
-]);
+import { SearchIcon, SearchXIcon } from 'lucide-vue-next';
+import PlaceCard from '@/components/PlaceCard.vue';
 
 // Filtres
 const searchQuery = ref('');
@@ -217,140 +183,15 @@ const itemsPerPage = 9;
 const totalPages = computed(() => Math.ceil(filteredLieux.value.length / itemsPerPage));
 
 // Données des lieux (simulées)
-const lieux = ref([
-  {
-    id: 1,
-    name: 'Le Petit Bistrot',
-    categorie: 'Restaurants',
-    note: 4.8,
-    description: 'Un charmant bistrot français avec une cuisine authentique et une ambiance conviviale.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: true,
-    distance: 1.2,
-    popularity: 95
-  },
-  {
-    id: 2,
-    name: 'Café des Artistes',
-    categorie: 'Cafés',
-    note: 4.5,
-    description: 'Un café cosy où les artistes locaux exposent leurs œuvres. Parfait pour travailler ou se détendre.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 0.8,
-    popularity: 87
-  },
-  {
-    id: 3,
-    name: 'Parc des Cèdres',
-    categorie: 'Parcs',
-    note: 4.7,
-    description: 'Un magnifique parc avec des sentiers de randonnée, des aires de jeux et des espaces de pique-nique.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 2.5,
-    popularity: 92
-  },
-  {
-    id: 4,
-    name: 'Hôtel Bellevue',
-    categorie: 'Hôtels',
-    note: 4.3,
-    description: 'Un hôtel élégant avec une vue imprenable sur la ville et un service impeccable.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 3.1,
-    popularity: 88
-  },
-  {
-    id: 5,
-    name: 'Musée d\'Art Moderne',
-    categorie: 'Culture',
-    note: 4.6,
-    description: 'Un musée fascinant présentant des œuvres d\'art contemporain d\'artistes locaux et internationaux.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: true,
-    distance: 4.2,
-    popularity: 90
-  },
-  {
-    id: 6,
-    name: 'Centre Commercial Les Arcades',
-    categorie: 'Shopping',
-    note: 4.0,
-    description: 'Un grand centre commercial avec une variété de boutiques, restaurants et divertissements.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 5.5,
-    popularity: 85
-  },
-  {
-    id: 7,
-    name: 'La Trattoria',
-    categorie: 'Restaurants',
-    note: 4.4,
-    description: 'Un restaurant italien authentique proposant des pizzas, pâtes et autres spécialités italiennes.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 1.8,
-    popularity: 89
-  },
-  {
-    id: 8,
-    name: 'Théâtre Municipal',
-    categorie: 'Culture',
-    note: 4.7,
-    description: 'Un théâtre historique proposant une programmation variée de pièces, concerts et spectacles.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 2.9,
-    popularity: 91
-  },
-  {
-    id: 9,
-    name: 'Boulangerie Artisanale',
-    categorie: 'Cafés',
-    note: 4.9,
-    description: 'Une boulangerie traditionnelle offrant des pains, viennoiseries et pâtisseries faits maison.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: true,
-    distance: 0.5,
-    popularity: 96
-  },
-  {
-    id: 10,
-    name: 'Jardin Botanique',
-    categorie: 'Parcs',
-    note: 4.5,
-    description: 'Un jardin paisible avec une collection impressionnante de plantes exotiques et locales.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 3.7,
-    popularity: 87
-  },
-  {
-    id: 11,
-    name: 'Boutique Mode Éthique',
-    categorie: 'Shopping',
-    note: 4.2,
-    description: 'Une boutique proposant des vêtements et accessoires éthiques et durables de créateurs locaux.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 1.5,
-    popularity: 83
-  },
-  {
-    id: 12,
-    name: 'Auberge du Vieux Port',
-    categorie: 'Hôtels',
-    note: 4.6,
-    description: 'Une auberge charmante située dans un bâtiment historique avec une ambiance chaleureuse.',
-    image: '/placeholder.svg?height=300&width=500',
-    favori: false,
-    distance: 2.2,
-    popularity: 88
-  }
-]);
+import { usePlaceStore } from '@/stores/usePlaceStore';
+import { useCategoryStore } from '@/stores/useCategoryStore';
+
+const placeStore = usePlaceStore();
+const categoriesStore = useCategoryStore();
+const lieux = computed(() => placeStore.places);
+// Catégories
+const categories = computed(() => categoriesStore.categories);
+
 
 // Lieux filtrés
 const filteredLieux = computed(() => {
@@ -367,32 +208,11 @@ const filteredLieux = computed(() => {
 
   // Filtre par catégories
   if (selectedCategories.value.length > 0) {
-    result = result.filter(lieu => selectedCategories.value.includes(lieu.categorie));
+    result = result.filter(lieu => selectedCategories.value.includes(lieu.category.name));
   }
 
   // Filtre par note minimale
-  result = result.filter(lieu => lieu.note >= minRating.value);
-
-  // Filtre par distance
-  result = result.filter(lieu => lieu.distance <= maxDistance.value);
-
-  // Tri
-  switch (sortBy.value) {
-    case 'rating':
-      result.sort((a, b) => b.note - a.note);
-      break;
-    case 'distance':
-      result.sort((a, b) => a.distance - b.distance);
-      break;
-    case 'newest':
-      // Dans un cas réel, on aurait une date de création
-      result.sort((a, b) => b.id - a.id);
-      break;
-    case 'popularity':
-    default:
-      result.sort((a, b) => b.popularity - a.popularity);
-      break;
-  }
+  result = result.filter(lieu => lieu.rating >= minRating.value);
 
   return result;
 });
@@ -417,7 +237,7 @@ const nextPage = () => {
   }
 };
 
-const goToPage = (page : number) => {
+const goToPage = (page: number) => {
   currentPage.value = page;
 };
 
@@ -435,16 +255,14 @@ const resetFilters = () => {
   currentPage.value = 1;
 };
 
-// Fonction pour ajouter/retirer des favoris
-const toggleFavori = (id : number) => {
-  const lieu = lieux.value.find(item => item.id === id);
-  if (lieu) {
-    lieu.favori = !lieu.favori;
-  }
-};
-
 // Initialisation
-onMounted(() => {
-  // Dans une application réelle, on chargerait les données depuis une API
+onMounted(async () => {
+  if (!placeStore.loading) {
+    await placeStore.fetchPlaces(); // Charger les lieux si non chargés
+  }
+
+  if (!categoriesStore.loading) {
+    await categoriesStore.fetchCategories(); // Charger les catégories si non chargées
+  }
 });
 </script>

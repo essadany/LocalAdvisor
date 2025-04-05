@@ -61,6 +61,12 @@ class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteAllReviews() {
+        reviewService.deleteAllReviews();
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 

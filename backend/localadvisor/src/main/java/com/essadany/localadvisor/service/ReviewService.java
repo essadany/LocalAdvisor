@@ -1,7 +1,11 @@
 package com.essadany.localadvisor.service;
 
+import com.essadany.localadvisor.model.Place;
 import com.essadany.localadvisor.model.Review;
+import com.essadany.localadvisor.model.User;
+import com.essadany.localadvisor.repository.PlaceRepository;
 import com.essadany.localadvisor.repository.ReviewRepository;
+import com.essadany.localadvisor.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,8 +19,18 @@ import java.util.Optional;
 public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PlaceRepository placeRepository;
 
     public Review addReview(Review review) {
+        User user = userRepository.findById(review.getUser().getId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Place place = placeRepository.findById(review.getPlace().getPlaceId())
+                .orElseThrow(() -> new RuntimeException("Place not found"));
+        review.setUser(user);
+        review.setPlace(place);
         return reviewRepository.save(review);
     }
 
@@ -42,5 +56,9 @@ public class ReviewService {
 
     public List<Review> getAllReviews() {
         return reviewRepository.findAll();
+    }
+
+    public void deleteAllReviews() {
+        reviewRepository.deleteAll();
     }
 }

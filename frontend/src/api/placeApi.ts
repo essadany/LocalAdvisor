@@ -1,19 +1,22 @@
 // Fonctions API pour les Places
 
 import { useAuth } from "@/composables/useAuth";
+import type { Category } from "./categoryApi";
 
 export interface Place {
-  id: number;
+  placeId: number;
   name: string;
   address: string;
   city: string;
+  country: string | null;
+  website: string | null;
+  phone: string | null;
   zip: string;
-  state: string;
-  rating: number;
   description: string;
-  image: string;
-  category: object;
+  rating: number;
+  category: Category;
 }
+
 
 const { token } = useAuth();
 
@@ -48,7 +51,7 @@ export const placeApi = {
   },
 
   updatePlace: async (place: Place): Promise<Place> => {
-    const response = await fetch(`/api/places/${place.id}`, {
+    const response = await fetch(`/api/places/${place.placeId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

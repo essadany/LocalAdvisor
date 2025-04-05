@@ -71,5 +71,13 @@ export const userApi = {
       headers: { Authorization: `Bearer ${token.value}` },
     })
     if (!response.ok) throw new Error('Erreur lors de la création du Favorite')
+  },
+
+  deleteFavorite: async (id: number): Promise<void> => {
+    const response = await fetch(`/api/favorites/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${token.value}` },
+    })
+    if (!response.ok) throw new Error('Erreur lors de la suppression du Favorite')
   }
 }

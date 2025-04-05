@@ -1,57 +1,54 @@
 // stores/useImageStore.ts
 import { defineStore } from "pinia";
-import { ref } from "vue";
 import { addImage, deleteImage, fetchImagesByPlaceId } from "@/api/ImageApi";
 
-export const useImageStore = defineStore("imageStore", () => {
-  const isLoading = ref(false);
-  const errorMessage = ref<string | null>(null);
+export const useImageStore = defineStore("imageStore", {
+  state: () => ({
+    isLoading: false,
+    errorMessage: null as string | null,
+  }),
 
-  const addPlaceImage = async (file: File, place_id: number, user_id: number) => {
-    try {
-      isLoading.value = true;
-      errorMessage.value = null;
-      const data = await addImage(file, place_id, user_id);
-      return data;
-    } catch (error) {
-      errorMessage.value = (error as Error).message;
-    } finally {
-      isLoading.value = false;
-    }
-  };
+  getters: {
+    hasError: (state) => !!state.errorMessage,
+  },
 
-  const getPlaceImages = async (place_id: number) => {
-    try {
-      isLoading.value = true;
-      errorMessage.value = null;
-      const data = await fetchImagesByPlaceId(place_id);
-      return data;
-    } catch (error) {
-      errorMessage.value = (error as Error).message;
-    } finally {
-      isLoading.value = false;
-    }
-  }
+  actions: {
+    async addPlaceImage(file: File, place_id: number, user_id: number) {
+      try {
+        this.isLoading = true;
+        this.errorMessage = null;
+        const data = await addImage(file, place_id, user_id);
+        return data;
+      } catch (error) {
+        this.errorMessage = (error as Error).message;
+      } finally {
+        this.isLoading = false;
+      }
+    },
 
+    async getPlaceImages(place_id: number) {
+      try {
+        this.isLoading = true;
+        this.errorMessage = null;
+        const data = await fetchImagesByPlaceId(place_id);
+        return data;
+      } catch (error) {
+        this.errorMessage = (error as Error).message;
+      } finally {
+        this.isLoading = false;
+      }
+    },
 
-  const deletePlaceImage = async (imageId: number) => {
-    try {
-      isLoading.value = true;
-      errorMessage.value = null;
-      await deleteImage(imageId);
-    } catch (error) {
-      errorMessage.value = (error as Error).message;
-    } finally {
-      isLoading.value = false;
-    }
-  };
-
-
-  return {
-    isLoading,
-    errorMessage,
-    addPlaceImage,
-    getPlaceImages,
-    deletePlaceImage,
-  };
+    async deletePlaceImage(imageId: number) {
+      try {
+        this.isLoading = true;
+        this.errorMessage = null;
+        await deleteImage(imageId);
+      } catch (error) {
+        this.errorMessage = (error as Error).message;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+  },
 });

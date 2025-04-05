@@ -12,4 +12,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
     void deleteByUserAndPlace(User user, Place place);
 
     Iterable<Favorite> findAllByUser(User user);
+
+    boolean existsByUserAndPlace(User user, Place place);
 }

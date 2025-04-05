@@ -43,7 +43,7 @@ export const usePlaceStore = defineStore('place', {
     async removePlace(id: number) {
       try {
         await placeApi.deletePlace(id);
-        this.places = this.places.filter((place) => place.id !== id);
+        this.places = this.places.filter((place) => place.placeId !== id);
       } catch (error: unknown) {
         if (error instanceof Error) {
           this.error = error.message;

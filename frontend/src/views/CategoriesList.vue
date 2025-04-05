@@ -40,43 +40,11 @@
 
       <!-- Liste des catégories -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div
-          v-for="categorie in filteredCategories"
-          :key="categorie.id"
-          class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-        >
-          <div class="relative h-48">
-            <img :src="categorie.image" :alt="categorie.nom" class="w-full h-full object-cover" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
-              <div class="p-6 w-full">
-                <div class="flex items-center justify-between">
-                  <h2 class="text-2xl font-bold text-white">{{ categorie.nom }}</h2>
-                  <div class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 text-white text-sm">
-                    {{ categorie.nombreLieux }} lieux
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="p-6">
-            <p class="text-gray-600 mb-4">{{ categorie.description }}</p>
-            <div class="flex flex-wrap gap-2 mb-4">
-              <span v-for="(tag, index) in categorie.tags" :key="index" class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
-                {{ tag }}
-              </span>
-            </div>
-            <div class="flex justify-between items-center">
-              <router-link
-                :to="`/places?category=${categorie.id}`"
-                class="text-emerald-600 hover:text-emerald-700 font-medium flex items-center"
-              >
-                Voir tous les lieux
-                <ArrowRightIcon class="h-4 w-4 ml-1" />
-              </router-link>
-              <span class="text-gray-500 text-sm">{{ categorie.nombreAvis }} avis</span>
-            </div>
-          </div>
-        </div>
+        <CategoryCard
+          v-for="(categorie, index) in categories"
+          :key="index"
+          :categorie="categorie"
+        />
       </div>
 
       <!-- Catégories populaires -->
@@ -84,16 +52,16 @@
         <h2 class="text-2xl font-bold text-gray-800 mb-6">Catégories populaires</h2>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div
-            v-for="categorie in popularCategories"
-            :key="categorie.id"
+            v-for="(categorie, index) in popularCategories"
+            :key="index"
             class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition cursor-pointer"
-            @click="$router.push(`/places?category=${categorie.id}`)"
+            @click="$router.push(`/places?category=${categorie.categoryId}`)"
           >
             <div class="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-4">
               <component :is="categorie.icon" class="h-8 w-8 text-emerald-600" />
             </div>
-            <h3 class="text-lg font-semibold mb-2">{{ categorie.nom }}</h3>
-            <p class="text-gray-600 text-sm">{{ categorie.nombreLieux }} lieux</p>
+            <h3 class="text-lg font-semibold mb-2">{{ categorie.name }}</h3>
+            <p class="text-gray-600 text-sm"> categorie.nombreLieux  lieux</p>
           </div>
         </div>
       </section>
@@ -136,7 +104,7 @@
               <input
                 type="text"
                 id="categoryName"
-                v-model="suggestionForm.nom"
+                v-model="suggestionForm.name"
                 placeholder="Ex: Parcs d'attractions"
                 required
                 class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
@@ -187,21 +155,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import {
-  SearchIcon,
-  ArrowRightIcon,
-  XIcon,
-  Coffee,
-  Utensils,
-  ShoppingBag,
-  Scissors,
-  Building,
-  Landmark,
-  Hotel,
-  Music
-} from 'lucide-vue-next';
-
+import { ref, computed, onMounted } from 'vue';
+import { SearchIcon, XIcon } from 'lucide-vue-next';
+import CategoryCard from '@/components/CategoryCard.vue';
+import { useCategoryStore } from '@/stores/useCategoryStore';
 // État du modal
 const showSuggestionModal = ref(false);
 
@@ -211,112 +168,25 @@ const sortBy = ref('name');
 
 // Formulaire de suggestion
 const suggestionForm = ref({
-  nom: '',
+  name: '',
   description: '',
   raison: ''
 });
 
-// Données des catégories (simulées)
-const categories = ref([
-  {
-    id: 1,
-    nom: 'Restaurants',
-    description: 'Découvrez les meilleurs restaurants près de chez vous, des bistrots traditionnels aux restaurants gastronomiques.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: Utensils,
-    nombreLieux: 1250,
-    nombreAvis: 8750,
-    popularite: 98,
-    tags: ['Gastronomie', 'Cuisine française', 'Cuisine italienne', 'Cuisine asiatique']
-  },
-  {
-    id: 2,
-    nom: 'Cafés & Bars',
-    description: 'Trouvez le café parfait pour votre pause, des cafés cosy aux bars branchés pour vos soirées.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: Coffee,
-    nombreLieux: 980,
-    nombreAvis: 6420,
-    popularite: 95,
-    tags: ['Café', 'Bar à vin', 'Cocktails', 'Brunch']
-  },
-  {
-    id: 3,
-    nom: 'Shopping',
-    description: 'Boutiques, centres commerciaux et marchés pour tous vos besoins shopping et cadeaux.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: ShoppingBag,
-    nombreLieux: 850,
-    nombreAvis: 4200,
-    popularite: 90,
-    tags: ['Mode', 'Décoration', 'Cadeaux', 'Artisanat']
-  },
-  {
-    id: 4,
-    nom: 'Beauté & Bien-être',
-    description: 'Salons de coiffure, spas et instituts de beauté pour prendre soin de vous.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: Scissors,
-    nombreLieux: 620,
-    nombreAvis: 3100,
-    popularite: 85,
-    tags: ['Spa', 'Massage', 'Coiffure', 'Soins esthétiques']
-  },
-  {
-    id: 5,
-    nom: 'Culture',
-    description: 'Musées, galeries et sites historiques pour enrichir vos connaissances et votre culture.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: Landmark,
-    nombreLieux: 450,
-    nombreAvis: 2800,
-    popularite: 88,
-    tags: ['Musée', 'Galerie d\'art', 'Monument', 'Exposition']
-  },
-  {
-    id: 6,
-    nom: 'Divertissement',
-    description: 'Cinémas, théâtres et lieux de spectacle pour vos sorties et divertissements.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: Music,
-    nombreLieux: 380,
-    nombreAvis: 2500,
-    popularite: 92,
-    tags: ['Cinéma', 'Théâtre', 'Concert', 'Spectacle']
-  },
-  {
-    id: 7,
-    nom: 'Hôtels',
-    description: 'Hébergements pour tous les budgets, des hôtels économiques aux établissements de luxe.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: Hotel,
-    nombreLieux: 320,
-    nombreAvis: 1950,
-    popularite: 82,
-    tags: ['Hôtel', 'Chambre d\'hôte', 'Auberge', 'Boutique-hôtel']
-  },
-  {
-    id: 8,
-    nom: 'Services',
-    description: 'Services locaux et commerces de proximité pour faciliter votre quotidien.',
-    image: '/placeholder.svg?height=300&width=500',
-    icon: Building,
-    nombreLieux: 580,
-    nombreAvis: 2100,
-    popularite: 78,
-    tags: ['Banque', 'Poste', 'Pressing', 'Réparation']
-  }
-]);
+// Données des catégories
+const categoryStore = useCategoryStore();
+
+const categories = computed(()=> categoryStore.categories);
 
 // Catégories filtrées
-const filteredCategories = computed(() => {
+/* const filteredCategories = computed(() => {
   let result = [...categories.value];
 
   // Filtre par recherche
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase();
     result = result.filter(categorie =>
-      categorie.nom.toLowerCase().includes(query) ||
+      categorie.name.toLowerCase().includes(query) ||
       categorie.description.toLowerCase().includes(query) ||
       categorie.tags.some(tag => tag.toLowerCase().includes(query))
     );
@@ -325,10 +195,10 @@ const filteredCategories = computed(() => {
   // Tri
   switch (sortBy.value) {
     case 'name':
-      result.sort((a, b) => a.nom.localeCompare(b.nom));
+      result.sort((a, b) => a.name.localeCompare(b.name));
       break;
     case 'name-desc':
-      result.sort((a, b) => b.nom.localeCompare(a.nom));
+      result.sort((a, b) => b.name.localeCompare(a.name));
       break;
     case 'popularity':
       result.sort((a, b) => b.popularite - a.popularite);
@@ -339,31 +209,33 @@ const filteredCategories = computed(() => {
   }
 
   return result;
-});
+}); */
 
 // Catégories populaires
 const popularCategories = computed(() => {
   return [...categories.value]
-    .sort((a, b) => b.popularite - a.popularite)
-    .slice(0, 4);
+    /* .sort((a, b) => b.popularite - a.popularite)
+    .slice(0, 4); */
 });
 
 // Soumission du formulaire de suggestion
 const submitSuggestion = () => {
-  // Dans une application réelle, on enverrait ces données à une API
   console.log('Suggestion soumise:', suggestionForm.value);
 
-  // Réinitialiser le formulaire
   suggestionForm.value = {
-    nom: '',
+    name: '',
     description: '',
     raison: ''
   };
 
-  // Fermer le modal
   showSuggestionModal.value = false;
 
-  // Afficher un message de confirmation
   alert('Merci pour votre suggestion ! Nous l\'examinerons dans les plus brefs délais.');
 };
+
+onMounted(async () => {
+  if (!categoryStore.loading){
+    await categoryStore.fetchCategories();
+  }
+});
 </script>

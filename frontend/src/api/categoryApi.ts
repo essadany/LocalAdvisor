@@ -1,7 +1,7 @@
 import { useAuth } from "@/composables/useAuth";
 
 export interface Category {
-  category_id: number;
+  categoryId: number;
   name: string;
   description: string;
   icon: string;
@@ -10,7 +10,7 @@ export interface Category {
 const { token } = useAuth();
 
 export const categoryApi = {
-  fetchCategories: async (): Promise<Category[]> => {
+  getCategories: async (): Promise<Category[]> => {
     const response = await fetch('/api/categories/all', {
       headers: {
         'Authorization': `Bearer ${token.value}`
@@ -20,7 +20,7 @@ export const categoryApi = {
     return await response.json();
   },
 
-  fetchCategoryById: async (category_id: string): Promise<Category | null> => {
+  getCategoryById: async (category_id: string): Promise<Category | null> => {
     const response = await fetch(`/api/categories/${category_id}`);
     if (!response.ok) throw new Error('Erreur lors du chargement du Category');
     return await response.json();
@@ -40,7 +40,7 @@ export const categoryApi = {
   },
 
   updateCategory: async (category: Category): Promise<Category> => {
-    const response = await fetch(`/api/categories/${category.category_id}`, {
+    const response = await fetch(`/api/categories/${category.categoryId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

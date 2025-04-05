@@ -20,20 +20,6 @@ public class FavoriteService {
     @Autowired
     private UserRepository userRepository;
 
-    public Favorite addFavorite(Long userId, Long placeId) {
-        Favorite favorite = new Favorite();
-        //get user by id
-        User user = new User();
-        user.setId(userId);
-        favorite.setUser(user);
-        //get place by id
-        Place place = new Place();
-        place.setPlaceId(placeId);
-        favorite.setPlace(place);
-        Date date = new Date();
-        favorite.setDateAdded(date);
-        return favoriteRepository.save(favorite);
-    }
 
     public void removeFavoriteById(Long favoriteId) {
         favoriteRepository.deleteById(favoriteId);
@@ -42,5 +28,13 @@ public class FavoriteService {
     public Iterable<Favorite> getFavoritesByUserId(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return favoriteRepository.findAllByUser(user);
+    }
+
+    public Favorite addFavorite(Favorite favorite) {
+        // Check if the favorite already exists
+        if (favoriteRepository.existsByUserAndPlace(favorite.getUser(), favorite.getPlace())) {
+            return null; // or throw an exception
+        }
+        return favoriteRepository.save(favorite);
     }
 }

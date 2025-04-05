@@ -17,13 +17,10 @@ class FavoriteController {
         return ResponseEntity.ok(favoriteService.getFavoritesByUserId(userId));
     }
 
-    @PostMapping("/{userId}/add/{placeId}")
-    public ResponseEntity<?> addFavorite(@PathVariable Long userId, @PathVariable Long placeId) {
-        Favorite addedFavorite = favoriteService.addFavorite(userId, placeId);
-        if (addedFavorite == null) {
-            return ResponseEntity.badRequest().body("Favorite already exists");
-        }
-        return ResponseEntity.ok("Favorite added successfully");
+    @PostMapping("/add")
+    public ResponseEntity<Favorite> addFavorite(@RequestBody Favorite favorite) {
+        Favorite createdFavorite = favoriteService.addFavorite(favorite);
+        return ResponseEntity.ok(createdFavorite);
     }
 
 

@@ -19,6 +19,9 @@ export const useUserStore = defineStore('userStore', {
     userId: (state) => state.user?.id || '',
     userName: (state) => state.user?.name || '',
     userRoles: (state) => state.user?.role || [],
+    isFavorite: (state) => (placeId: number) => {
+      return state.favorites.some((favorite) => favorite.placeId === placeId);
+    }
   },
 
   actions: {
@@ -88,7 +91,7 @@ export const useUserStore = defineStore('userStore', {
       }
     },
 
-    async addPlaceToFavorites(user_id: number, place_id: number) {
+    async addPlaceToFavorites(place_id: number) {
       try {
         if (this.user?.id !== undefined) {
           await userApi.createFavorite(this.user.id, place_id);
@@ -107,5 +110,22 @@ export const useUserStore = defineStore('userStore', {
         }
       }
     },
+
+    async removePlaceFromFavorites(place_id: number) {
+      //get favorite id
+      const favorite = this.favorites.find(fav => fav.placeId === place_id);
+      if (!favorite) return;
+      try {
+        await userApi.deleteFavorite(favorite.placeId);
+        this.favorites = this.favorites.filter(fav => fav.placeId !== place_id);
+      }
+      catch (error: unknown) {
+        if (error instanceof Error) {
+          this.error = error.message;
+        } else {
+          this.error = String(error);
+        }
+      }
+    }
   },
 });

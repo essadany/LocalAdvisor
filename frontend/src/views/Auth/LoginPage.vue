@@ -230,7 +230,7 @@ const handleLogin = async () => {
   try {
     await login(loginForm.email, loginForm.password);
     await userStore.SotreConnectedUser();
-    router.push('/places'); // Redirection vers la page d'accueil après connexion
+    router.push('/categories'); // Redirection vers la page d'accueil après connexion
   } catch (error) {
     errorMessage.value = 'Identifiants incorrects';
     console.error('Erreur de connexion :', error);

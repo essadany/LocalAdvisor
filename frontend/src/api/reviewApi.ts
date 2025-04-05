@@ -1,9 +1,11 @@
 import { useAuth } from "@/composables/useAuth";
+import type { User } from "./userApi";
+import type { Place } from "./placeApi";
 
 export interface Review {
-  review_id: number;
-  place_id: number;
-  user_id: number;
+  reviewId: number;
+  user : User;
+  place : Place
   rating: number;
   content: string;
   createdAt: string;
@@ -12,7 +14,16 @@ export interface Review {
 const { token } = useAuth();
 
 export const reviewApi = {
-  fetchReviewsByPlaceId: async (place_id: number): Promise<Review[]> => {
+
+  getAllReviews: async (): Promise<Review[]> => {
+    const response = await fetch('/api/reviews/all', {
+      headers: { Authorization: `Bearer ${token.value}` },
+    });
+    if (!response.ok) throw new Error('Erreur lors du chargement des Reviews');
+    return await response.json();
+  },
+
+  getReviewsByPlaceId: async (place_id: number): Promise<Review[]> => {
     const response = await fetch(`/api/reviews/place/${place_id}`, {
       headers: { Authorization: `Bearer ${token.value}` },
     });
@@ -20,7 +31,7 @@ export const reviewApi = {
     return await response.json();
   },
 
-  fetchReviewsByUserId: async (user_id: number): Promise<Review[]> => {
+  getReviewsByUserId: async (user_id: number): Promise<Review[]> => {
     const response = await fetch(`/api/reviews/user/${user_id}`, {
       headers: { Authorization: `Bearer ${token.value}` },
     });
@@ -28,7 +39,7 @@ export const reviewApi = {
     return await response.json();
   },
 
-  fetchReviewById: async (review_id: string): Promise<Review | null> => {
+  getReviewById: async (review_id: string): Promise<Review | null> => {
     const response = await fetch(`/api/reviews/${review_id}`);
     if (!response.ok) throw new Error('Erreur lors du chargement du Review');
     return await response.json();
@@ -48,7 +59,7 @@ export const reviewApi = {
   },
 
   updateReview: async (review: Review): Promise<Review> => {
-    const response = await fetch(`/api/reviews/${review.review_id}`, {
+    const response = await fetch(`/api/reviews/${review.reviewId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

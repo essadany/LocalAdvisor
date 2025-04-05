@@ -16,6 +16,11 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reviewId;
+    private String content;
+    @Min(0)
+    @Max(5)
+    private int rating;
+    private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -25,9 +30,10 @@ public class Review {
     @JoinColumn(name = "place_id")
     private Place place;
 
-    private String content;
-    @Min(0)
-    @Max(5)
-    private int rating;
-    private Date createdAt;
+
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+    }
 }
