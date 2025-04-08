@@ -14,7 +14,10 @@
           <a href="/contact" class="text-gray-700 hover:text-emerald-600 font-medium">Contact</a>
         </nav>
         <div class="flex items-center space-x-4">
-          <template v-if="isAuthenticated">
+          <template v-if="userStore.isAuthenticated">
+            <p>
+              {{ userStore.user?.name }}
+            </p>
             <a href="/" @click="handleLogout" class="text-gray-700 hover:text-emerald-600 font-medium" title="Logout">
               <LogOut class="h-6 w-6 text-gray-700" />
             </a>
@@ -41,7 +44,7 @@
           <a href="/categories" class="text-gray-700 hover:text-emerald-600 font-medium">Catégories</a>
           <a href="/about" class="text-gray-700 hover:text-emerald-600 font-medium">À propos</a>
           <a href="/contact" class="text-gray-700 hover:text-emerald-600 font-medium">Contact</a>
-            <template v-if="isAuthenticated">
+            <template v-if="userStore.isAuthenticated">
               <a href="/" @click="handleLogout" class="text-gray-700 hover:text-emerald-600 font-medium">
               <LogOut class="h-6 w-6 text-gray-700" />
             </a>
@@ -57,7 +60,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { MapPin, Menu, LogOut} from 'lucide-vue-next'
 import { useAuth } from '@/composables/useAuth'
 import { useUserStore } from '@/stores/useUserStore'
@@ -71,10 +74,11 @@ const toggleMobileMenu = () => {
 
 const { logout } = useAuth()
 const userStore = useUserStore()
-const isAuthenticated = computed(() => userStore.isAuthenticated)
 
-const handleLogout = () => {
+const handleLogout =  () => {
   logout()
   userStore.user = null;
 }
+
+
 </script>

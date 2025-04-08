@@ -62,6 +62,16 @@ const router = createRouter({
       name: 'contact',
       component: () => import('../views/ContactView.vue'),
     },
+    /* {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../views/admin/AdminDashboard.vue'),
+    },
+    {
+      path: '/admin/users',
+      name: 'admin-users',
+      component: () => import('../views/admin/AdminUsers.vue'),
+    }, */
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
@@ -70,5 +80,33 @@ const router = createRouter({
 
   ],
 })
+
+
+// Navigation guard to check authentication
+router.beforeEach((to, from, next) => {
+  const loggedIn = localStorage.getItem('token') !== null;
+  const publicPages = ['/', '/login', '/register', '/about', '/contact', '/places', '/places/:id', '/categories'];
+  const authRequired = !publicPages.includes(to.path);
+  if (authRequired && !loggedIn) {
+    next({path: '/login', query: { redirect: to.fullPath }});
+  } else {
+    console.log('User is authenticated:', loggedIn);
+    console.log('Navigating to:', to.path);
+    next();
+  }
+}
+);
+// Navigation guard to check if the user is an admin
+router.beforeEach((to, from, next) => {
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  const adminPages = ['/admin', '/admin/users'];
+  const authRequired = adminPages.includes(to.path);
+  if (authRequired && !isAdmin) {
+    next({path: '/login', query: { redirect: to.fullPath }});
+  } else {
+    next();
+  }
+}
+);
 
 export default router

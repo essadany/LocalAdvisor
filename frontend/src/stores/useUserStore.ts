@@ -45,7 +45,7 @@ export const useUserStore = defineStore('userStore', {
     async SotreConnectedUser() {
       if (this.user) return;
       if (!username) return;
-      this.user = await userApi.getUserByEmail(username)
+      this.user = await userApi.getUserByEmail(username.value)
     },
 
     async editUser(id: number, user: User) {
