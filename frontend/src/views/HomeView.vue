@@ -199,9 +199,9 @@ const placeStore = usePlaceStore()
 const reviewStore = useReviewStore()
 const categoryStore = useCategoryStore()
 
+const categories = computed(() => categoryStore.categories)
 const popularPlaces = computed(() => placeStore.places.slice(0, 3))
 const recentReviews = computed(() => reviewStore.reviews)
-const categories = computed(() => categoryStore.categories)
 const stats = {
   places: '5,000',
   users: '250,000',
