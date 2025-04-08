@@ -17,7 +17,6 @@ export const reviewApi = {
 
   getAllReviews: async (): Promise<Review[]> => {
     const response = await fetch('/api/reviews/all', {
-      headers: { Authorization: `Bearer ${token.value}` },
     });
     if (!response.ok) throw new Error('Erreur lors du chargement des Reviews');
     return await response.json();

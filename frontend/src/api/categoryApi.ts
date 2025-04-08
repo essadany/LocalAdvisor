@@ -12,9 +12,7 @@ const { token } = useAuth();
 export const categoryApi = {
   getCategories: async (): Promise<Category[]> => {
     const response = await fetch('/api/categories/all', {
-      headers: {
-        'Authorization': `Bearer ${token.value}`
-      }
+      
     });
     if (!response.ok) throw new Error('Erreur lors du chargement des Categories');
     return await response.json();

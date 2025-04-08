@@ -23,9 +23,7 @@ const { token } = useAuth();
 export const placeApi = {
   getPlaces: async (): Promise<Place[]> => {
     const response = await fetch('/api/places/all', {
-      headers: {
-        'Authorization': `Bearer ${token.value}`
-      }
+      
     });
     if (!response.ok) throw new Error('Erreur lors du chargement des Places');
     return await response.json();
